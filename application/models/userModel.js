@@ -17,5 +17,7 @@ let userSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('usermodel', userSchema);
+mongoose.model('UserModel', userSchema);
+
+module.exports = mongoose
 

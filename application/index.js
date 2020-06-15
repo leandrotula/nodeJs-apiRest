@@ -10,10 +10,11 @@ app.use(bodyParser.json())
 app.use('/v1/users', require('./routes/userRoutes'))
 
 
-mongoose.connect('', (err, res) => {
+mongoose.connect("mongodb://localhost/users", (err, res) => {
     if (err) {
         console.log(err)
     }
-    app.listen(app.get('port'), () => console.log(`Listening on port ${app.get('port')}`))
+
 })
 
+app.listen(app.get('port'), () => console.log(`Listening on port ${app.get('port')}`))
