@@ -29,7 +29,20 @@ let save = (req, res) => {
     })
 }
 
+let findById = (req, res) => {
+    UserModel.findById(req.params.id, (err, user) => {
+
+        if (err) {
+            res.status(500)
+        }
+
+        res.status(200).json(user);
+
+    });
+}
+
 module.exports = {
     findAll,
-    save
+    save,
+    findById
 }

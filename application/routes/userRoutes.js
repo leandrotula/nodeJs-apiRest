@@ -6,4 +6,7 @@ router.route('/')
     .get(userController.findAll)
     .post(userController.save)
 
+router.route('/:id')
+    .get(userController.findById)
+
 module.exports = router
