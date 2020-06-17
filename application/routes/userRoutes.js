@@ -8,7 +8,7 @@ router.route('/')
 
 router.route('/:id')
     .get(userController.findById)
-    .delete(userController.changeState)
+    .delete(userController.deleteById)
     .put(userController.update)
 
 module.exports = router

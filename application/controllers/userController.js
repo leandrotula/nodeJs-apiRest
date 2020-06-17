@@ -4,16 +4,17 @@ const UserModel = mongoose.model('UserModel')
 
 let findAll = (req, res) => {
 
-    UserModel.find((err, user) => {
+    UserModel.find({state: true}, 'name lastName email')
+        .exec((err, user) => {
 
-        if (err) {
-            res.status(500).json({
+            if (err) res.status(500).json({
                 error: err
             })
-            return;
-        }
-        res.json(user)
-    })
+
+            res.status(200).json(user)
+
+        });
+
 }
 
 let save = (req, res) => {
@@ -60,41 +61,33 @@ let findById = (req, res) => {
 
 let deleteById = (req, res) => {
 
-    UserModel.findById(req.params.id,  (err, user) => {
+    let id = req.params.id;
 
-        if (err) res.status(500).json({
-            error: err
-        })
+   UserModel.findByIdAndRemove(id, (err, user ) => {
 
-        if (!user) {
-            res.status(404).json({
-                id: req.params.id,
-                error: {
-                    message: "user not found"
-                }
-            })
-        }
+       if (err) {
+           res.status(500).json({
+               error: err
+           })
+           return;
+       }
 
-        user.remove((err) => {
-            if (err) res.status(500).json({
-                error: err
-            })
-
-            res.status(200).json({
-                id: req.params.id
-            })
-        })
-    })
+       res.status(200).json(user);
+   })
 }
 
 let update = (req, res) => {
 
-    UserModel.findById(req.params.id, (err, user) => {
+    let id = req.params.id;
+    let body = req.body;
+
+    UserModel.findByIdAndUpdate(id, body, {new : true, runValidators: true},(err, user) => {
 
         if (err) {
             res.status(500).json({
                 error: err
             })
+            return;
         }
 
         if (!user) {
@@ -105,23 +98,11 @@ let update = (req, res) => {
                 }
             })
 
-            return
+            return;
         }
 
-        user.name = req.body.name
-        user.lastName = req.body.lastName
-        user.email = req.body.email
-
-        user.save((err) => {
-
-            if (err) res.status(500).json({
-                error: err
-            })
-            res.status(200).json(user)
-
-        })
+        res.status(200).json(user)
     })
-
 }
 
 let changeState = (req, res) => {
