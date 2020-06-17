@@ -1,23 +1,14 @@
 const {Router} = require('express')
-
 const router =  Router()
-const data = require('../../users.json')
-const _ = require('underscore')
+const userController = require('../controllers/userController')
 
-router.get('/', (req, res) => {
-    res.json(data)
-})
+router.route('/')
+    .get(userController.findAll)
+    .post(userController.save)
 
-router.get('/:id', (req, res) => {
-
-    let userId = req.params.id;
-
-    let userFound = _.find(data, user => user.id == userId)
-
-    if (!userFound) {
-        res.status(404)
-    }
-    res.json(userFound)
-})
+router.route('/:id')
+    .get(userController.findById)
+    .delete(userController.deleteById)
+    .put(userController.update)
 
 module.exports = router
