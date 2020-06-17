@@ -7,7 +7,9 @@ let findAll = (req, res) => {
     UserModel.find((err, user) => {
 
         if (err) {
-            res.status(404)
+            res.status(500).json({
+                error: err
+            })
         }
         res.json(user)
     })
@@ -33,7 +35,18 @@ let findById = (req, res) => {
     UserModel.findById(req.params.id, (err, user) => {
 
         if (err) {
-            res.status(500)
+            res.status(500).json({
+                error: err
+            })
+        }
+
+        if (!user) {
+            res.status(404).json({
+                id: req.params.id,
+                error: {
+                    message: "user not found"
+                }
+            })
         }
 
         res.status(200).json(user);
@@ -41,8 +54,74 @@ let findById = (req, res) => {
     });
 }
 
+let deleteById = (req, res) => {
+
+    UserModel.findById(req.params.id,  (err, user) => {
+
+        if (err) res.status(500).json({
+            error: err
+        })
+
+        if (!user) {
+            res.status(404).json({
+                id: req.params.id,
+                error: {
+                    message: "user not found"
+                }
+            })
+        }
+
+        user.remove((err) => {
+            if (err) res.status(500).json({
+                error: err
+            })
+
+            res.status(200).json({
+                id: req.params.id
+            })
+        })
+    })
+}
+
+let update = (req, res) => {
+
+    UserModel.findById(req.params.id, (err, user) => {
+
+        if (err) {
+            res.status(500).json({
+                error: err
+            })
+        }
+
+        if (!user) {
+            res.status(404).json({
+                id: req.params.id,
+                error: {
+                    message: "user not found"
+                }
+            })
+
+            return
+        }
+
+        user.name = req.body.name
+        user.lastName = req.body.lastName
+        user.email = req.body.email
+
+        user.save((err) => {
+
+            if (err) res.status(500)
+            res.status(200).json(user)
+
+        })
+    })
+
+}
+
 module.exports = {
     findAll,
     save,
-    findById
+    findById,
+    deleteById,
+    update
 }

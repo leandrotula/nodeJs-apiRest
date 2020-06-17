@@ -8,5 +8,7 @@ router.route('/')
 
 router.route('/:id')
     .get(userController.findById)
+    .delete(userController.deleteById)
+    .put(userController.update)
 
 module.exports = router
