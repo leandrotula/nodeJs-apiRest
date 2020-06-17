@@ -10,6 +10,7 @@ let findAll = (req, res) => {
             res.status(500).json({
                 error: err
             })
+            return;
         }
         res.json(user)
     })
@@ -25,7 +26,9 @@ let save = (req, res) => {
 
     userToSave.save(function (err) {
 
-        if (err) res.status(500)
+        if (err) res.status(500).json({
+            error: err
+        })
         res.status(201).json(userToSave)
 
     })
@@ -47,6 +50,7 @@ let findById = (req, res) => {
                     message: "user not found"
                 }
             })
+            return;
         }
 
         res.status(200).json(user);
@@ -110,7 +114,9 @@ let update = (req, res) => {
 
         user.save((err) => {
 
-            if (err) res.status(500)
+            if (err) res.status(500).json({
+                error: err
+            })
             res.status(200).json(user)
 
         })
@@ -118,10 +124,41 @@ let update = (req, res) => {
 
 }
 
+let changeState = (req, res) => {
+
+    UserModel.findById(req.params.id,  (err, user) => {
+
+        if (err) res.status(500).json({
+            error: err
+        })
+
+        if (!user) {
+            res.status(404).json({
+                id: req.params.id,
+                error: {
+                    message: "user not found"
+                }
+            })
+        }
+
+        user.state = false
+
+        user.save((err) => {
+
+            if (err) res.status(500).json({
+                error: err
+            })
+            res.status(200).json(user)
+
+        })
+    })
+}
+
 module.exports = {
     findAll,
     save,
     findById,
     deleteById,
-    update
+    update,
+    changeState
 }
