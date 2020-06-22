@@ -7,7 +7,7 @@ app.set('port', process.env.PORT || 3000)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use('/v1/users', require('./routes/userRoutes'))
+app.use('/v1/users', require('./user.routes'))
 
 
 mongoose.connect("mongodb://localhost/users", (err, res) => {
