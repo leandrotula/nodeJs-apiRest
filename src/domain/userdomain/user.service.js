@@ -22,22 +22,9 @@ class UserService {
         return await userToSave.save();
     }
 
-    findById(id) {
+    async findById(id) {
 
-        return UserModel.findById(id, (err, user) => {
-
-            if (err) {
-                throw err
-            }
-
-            if (!user) {
-                throw new Error({
-                    id: id,
-                    message: "User not found"
-                })
-            }
-
-        });
+        return await UserModel.findById(id);
 
     }
 

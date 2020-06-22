@@ -4,10 +4,15 @@ exports.get = async (req, res, next) => {
 
     let id = req.params.id;
 
-    let user = await userService.findById(id)
-
-    res.json(user)
-
+    userService.findById(id).then(user => {
+        if (!user) {
+            res.status(404).json({
+                message: "user not found"
+            })
+            return;
+        }
+        res.json(user)
+    }).catch(err => res.json(err))
 }
 
 exports.delete = async (req, res, next) => {
